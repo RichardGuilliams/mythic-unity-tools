@@ -4,7 +4,7 @@ using UnityEditor;
 
 [AddComponentMenu("ComponentsMythic/Animations/Glow (Hierarchy)")]
 [DisallowMultipleComponent]
-public class GlowAnimation : Animation
+public class GlowAnimation : AnimationBase
 {
     public bool loaded = false;
     [SerializeField] public string objectName{get => this.ObjectName; set => this.ObjectName = value;}

@@ -1,9 +1,6 @@
 using UnityEngine;
 using System;
 using System.Collections.Generic;
-using System.Security.AccessControl;
-using System.Drawing;
-using System.Security.Cryptography.X509Certificates;
 
 [System.Serializable]public abstract class StatBase : AbstractScriptable
 {

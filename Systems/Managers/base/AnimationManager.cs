@@ -9,7 +9,7 @@ public class AnimationManager : Manager
 {
     public int index = 0;
 
-    public List<Animation> animations;
+    public List<AnimationBase> animations;
     public Animation currentAnimation;
     
     public override void start()
@@ -20,7 +20,7 @@ public class AnimationManager : Manager
 
     public virtual void getAnimations()
     {
-        this.animations = FindObjectsByType<Animation>(FindObjectsSortMode.None).ToList();
+        this.animations = FindObjectsByType<AnimationBase>(FindObjectsSortMode.None).ToList();
     }
 
     public virtual void updateIndex()

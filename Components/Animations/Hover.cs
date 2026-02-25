@@ -2,7 +2,7 @@ using UnityEngine;
 
 [AddComponentMenu("ComponentsMythic/Animations/Hover")]
 [DisallowMultipleComponent]
-public class HoverAnimation : Animation
+public class HoverAnimation : AnimationBase
 {
     [Header("Target")]
     [Tooltip("If null, uses this transform.")]
