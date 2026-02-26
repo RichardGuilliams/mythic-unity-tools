@@ -1,12 +1,12 @@
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class StatEditor : EditorWindow
 {
     private StatEditorBlockPanel statEditorBlockPanel;
-        private StatEditorUnitPanel statEditorUnitPanel;
-
+    private StatEditorUnitPanel statEditorUnitPanel;
     private StatEditorSettingsPanel statEditorSettingsPanel;
 
     // Top-level tabs   
@@ -29,8 +29,7 @@ public class StatEditor : EditorWindow
     {
         // Initialize any necessary data here
         statEditorBlockPanel = CreateInstance<StatEditorBlockPanel>();
-                statEditorUnitPanel = CreateInstance<StatEditorUnitPanel>();
-
+        statEditorUnitPanel = CreateInstance<StatEditorUnitPanel>();
         statEditorSettingsPanel = CreateInstance<StatEditorSettingsPanel>();
 
     }
@@ -38,17 +37,12 @@ public class StatEditor : EditorWindow
     private void OnGUI()
     {
         DrawTopToolbar();
-
-        // Main content area (everything except bottom panel)
-        Rect full = position;
-        full.x = 0; full.y = 0; // GUI coords
-        full.height -= bottomHeight;
-
-        Rect bottom = new Rect(0, position.height - bottomHeight, position.width, bottomHeight);
-
-        DrawMainArea(full);
-        DrawBottomPanel(bottom);
+        DrawMainArea(getMainArea());
+        DrawBottomPanel(getBottomArea());
     }
+
+    private Rect getMainArea() => new Rect(0, 30, position.width, position.height - 30 - bottomHeight);
+    private Rect getBottomArea() => new Rect(0, position.height - bottomHeight, position.width, bottomHeight);
 
     private void DrawTopToolbar()
     {
@@ -59,33 +53,21 @@ public class StatEditor : EditorWindow
     private void DrawMainArea(Rect area)
     {
         // Split into left/right
+        //Rect(x, y, width, height)
+        Rect main = new Rect(0, 30, area.width, area.height);
         Rect left = new Rect(0, 30, leftWidth, area.height - 30);
         Rect right = new Rect(leftWidth + 6, 30, area.width - leftWidth - 6, area.height - 30);
 
-        // Divider line
-        EditorGUI.DrawRect(new Rect(leftWidth, 30, 1, area.height - 30), new Color(0,0,0,0.25f));
+        // Divider line with DrawRect(new Rect(x, y width, height), new Color(r,g,b,a))
 
-        GUILayout.BeginArea(left);
-        DrawLeftPanel();
-        GUILayout.EndArea();
 
-        GUILayout.BeginArea(right);
-        DrawRightPanel();
-        GUILayout.EndArea();
+        DrawArea();
+
     }
 
-    private void DrawLeftPanel()
-    {
-        GUILayout.Label("Left Panel", EditorStyles.boldLabel);
 
-        leftScroll = EditorGUILayout.BeginScrollView(leftScroll);
-        GUILayout.Label("List goes here...");
-        for (int i = 0; i < 30; i++)
-            GUILayout.Button("Item " + i);
-        EditorGUILayout.EndScrollView();
-    }
 
-    private void DrawRightPanel()
+    private void DrawArea()
     {
         rightScroll = EditorGUILayout.BeginScrollView(rightScroll);
 
@@ -121,54 +103,5 @@ public class StatEditor : EditorWindow
 
         GUILayout.EndArea();
     }
-
-    public void drawStatEditorBlockPanel(){
-        statEditorBlockPanel.draw();
-                GUILayout.Label("Stat Editor", EditorStyles.boldLabel);
-                GUILayout.Label("Stat Editor UI here...");
-    }
-
-    public void drawUnitEditorPanel(){
-                GUILayout.Label("Unit Editor", EditorStyles.boldLabel);
-                GUILayout.Label("Unit Editor UI here...");
-    }
-
-    public void drawSettingsPanel(){
-                GUILayout.Label("Settings Editor", EditorStyles.boldLabel);
-                GUILayout.Label("Settings UI here...");
-    }
 }
-
-public class StatEditorBlockPanel : EditorWindow
-{
-
-    public void draw()
-    {
-        GUILayout.Label("Stat Editor", EditorStyles.boldLabel);
-        GUILayout.Label("UI here...");
-    }
-}
-
-public class StatEditorUnitPanel : EditorWindow
-{
-
-    public void draw()
-    {
-        GUILayout.Label("Unit Editor", EditorStyles.boldLabel);
-        GUILayout.Label("UI here...");
-    }
-}
-
-public class StatEditorSettingsPanel : EditorWindow
-{
-
-    public void draw()
-    {
-        GUILayout.Label("Unit Editor", EditorStyles.boldLabel);
-        GUILayout.Label("UI here...");
-    }
-}
-
-
-
 #endif
