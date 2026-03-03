@@ -67,7 +67,7 @@ public abstract class BaseGUIPanel : EditorWindow
         GUILayout.BeginArea(area);
     }
     public virtual void OnEnable(){}
-    public virtual void draw(){}
+    public virtual void draw(Rect area){}
 }
 
 #endif

@@ -14,13 +14,12 @@ public class ListPanel : BaseGUIPanel
         boundAction = () => Debug.Log("Item clicked");
     }   
 
-    public override void draw(){
+    public override void draw(Rect area){
         Label("Left Panel", EditorStyles.boldLabel);
-
     }
 
-    public virtual void drawList<T>(IList<T> items, System.Action<int, T> onClicked, System.Func<T, string> getLabel = null){
-        draw();
+    public virtual void drawList<T>(Rect area, IList<T> items, System.Action<int, T> onClicked, System.Func<T, string> getLabel = null){
+        draw(area);
         
         getLabel ??= (item) => item?.ToString() ?? "(null)";
         scroll = EditorGUILayout.BeginScrollView(scroll);
@@ -38,6 +37,17 @@ public class ListPanel : BaseGUIPanel
     public virtual void OnItemClicked(int index)
     {
         Debug.Log("Clicked index: " + index);
+    }
+}
+
+public class ButtonNested : BaseGUIPanel{
+    public override void draw(Rect area)
+    {
+        GUILayout.BeginHorizontal();
+        Button("Button 1", () => Debug.Log("Button 1 clicked"));
+        Button("Button 2", () => Debug.Log("Button 2 clicked"));   
+        GUILayout.EndHorizontal();
+
     }
 }
 

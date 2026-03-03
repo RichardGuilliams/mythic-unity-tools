@@ -23,22 +23,22 @@ public class StatBlock : AbstractScriptable
 
     private void OnValidate()
     {
-        if(statsList.Count == 0) statsList = new List<StatBase>(Resources.LoadAll<StatBase>(folder));
-        if(statsList.Count < statData.Count && statsList.Count != 0)
-        {
-            ProcessStatsList();
-            return;
-        }    
-        if(statData.Count > statCount)
-        {
-            statData.RemoveAt(statCount);
-            return;
-        }
-        if (!Application.isPlaying)
-            {
-                statCount = statsList.Count;
-                ProcessStatsList();
-            }
+        // if(statsList.Count == 0) statsList = new List<StatBase>(Resources.LoadAll<StatBase>(folder));
+        // if(statsList.Count < statData.Count && statsList.Count != 0)
+        // {
+        //     ProcessStatsList();
+        //     return;
+        // }    
+        // if(statData.Count > statCount)
+        // {
+        //     statData.RemoveAt(statCount);
+        //     return;
+        // }
+        // if (!Application.isPlaying)
+        //     {
+        //         statCount = statsList.Count;
+        //         ProcessStatsList();
+        //     }
 
     }
     private void ProcessStatsList()

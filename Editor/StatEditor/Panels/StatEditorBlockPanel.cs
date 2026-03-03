@@ -6,12 +6,20 @@ using System.Collections.Generic;
 
 public class StatEditorBlockPanel : BaseGUIPanel
 {
-    private string AssetPath;
-    private Rect left = new Rect(0, 0, 260, 450);
-    private Rect right = new Rect(266, 0, 400, 450);
-    private ListPanel listPanel;
+    private string assetPath;
+    private string assetName;
 
+    public string AssetPath{get => assetPath; set => assetPath = value;}
+    public string AssetName{get => assetName; set => assetName = value;}
+
+    private Rect left;
+    private Rect right;
+    private Rect top;
+    private Rect bottom;
+
+    private ListPanel listPanel;
     private List<StatBlock> statBlocks;
+
     public override void OnEnable()
     {
         statBlocks = new List<StatBlock>();
@@ -19,21 +27,47 @@ public class StatEditorBlockPanel : BaseGUIPanel
         // Load stat blocks from resources or create dummy data
     }
 
-    public override void draw()
+    public void SplitHorizontal(Rect area, float width)
     {
+        left = new Rect(area.x, area.y, width, area.height - 160);
+        right = new Rect(area.x + width + 6, area.y, area.width, area.height - 160);
+    }
+
+    public void SplitVertical(Rect area, float height)
+    {
+        top = new Rect(area.x, area.y, area.width, height);
+        bottom = new Rect(area.x, area.y + height + 6, area.width, area.height - height - 6);
+    }
+
+    public override void draw(Rect area)
+    {
+        SplitHorizontal(area, 260);
+
         BeginArea(left);
-        //GUILayout.BeginArea(left);
-        GUILayout.Label("Base Stat Blocks", EditorStyles.boldLabel);
-        GUILayout.Space(6);
-        GUILayout.Button("Create New Stat Block");
-        GUILayout.Space(6);
-        listPanel.draw();
-        GUILayout.Space(6);
-        GUILayout.EndArea();
-        GUILayout.BeginArea(right);
-        GUILayout.Label("Stat Editor", EditorStyles.boldLabel);
-        GUILayout.Label("UI here...");
-        GUILayout.EndArea();
+        Label("Base Stat Blocks", EditorStyles.boldLabel);
+        Space(6);
+        AssetPath = (EditorGUILayout.TextField("Asset Folder", AssetPath));
+        AssetName = (EditorGUILayout.TextField("Asset Name", AssetName));
+        Button("Create Stat Block", () => onCreateNewAsset());    
+        listPanel.drawList(left, statBlocks, (index, block) => Debug.Log("Clicked on: " + block.name), (block) => block.name);
+        Space(6);
+        EditorGUI.DrawRect(new Rect(left.width - 1, 0, 12, area.height), new Color(0,0,0,0.25f));
+        EndArea();
+ 
+        BeginArea(right);
+        Label("Stat Editor", EditorStyles.boldLabel);
+        Label("UI here...");
+        EndArea();
+    }
+
+
+    private void onCreateNewAsset()
+    {
+        // Create a new stat block and add it to the list
+        AssetFactory.CreateAsset(typeof(StatBlock), AssetPath, AssetName, true);
+        StatBlock newStatBlock = CreateInstance<StatBlock>();
+        newStatBlock.name = AssetName;
+        statBlocks.Add(newStatBlock);
     }
 }
 

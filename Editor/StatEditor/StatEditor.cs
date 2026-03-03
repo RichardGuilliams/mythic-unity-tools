@@ -5,44 +5,36 @@ using System.Collections.Generic;
 
 public class StatEditor : EditorWindow
 {
+    private Rect mainArea;
+
     private StatEditorBlockPanel statEditorBlockPanel;
     private StatEditorUnitPanel statEditorUnitPanel;
     private StatEditorSettingsPanel statEditorSettingsPanel;
+    private ConsolePanel consolePanel;
 
     // Top-level tabs   
     private int topTab;
     private readonly string[] topTabs = { "Stat Block", "Units", "Settings" };
-
-
-    // Layout state
-    private Vector2 leftScroll;
-    private Vector2 rightScroll;
-    private Vector2 bottomScroll;
-
-    private float leftWidth = 260f;
-    private float bottomHeight = 140f;
 
     [MenuItem("MythicTools/Stat Editor")]
     public static void Open() => GetWindow<StatEditor>("Stat Editor");
 
     private void OnEnable()
     {
+        mainArea = new Rect(0, 20, position.width, position.height - 20);
         // Initialize any necessary data here
         statEditorBlockPanel = CreateInstance<StatEditorBlockPanel>();
         statEditorUnitPanel = CreateInstance<StatEditorUnitPanel>();
         statEditorSettingsPanel = CreateInstance<StatEditorSettingsPanel>();
-
+        consolePanel = CreateInstance<ConsolePanel>();
     }
 
     private void OnGUI()
     {
         DrawTopToolbar();
-        DrawMainArea(getMainArea());
-        DrawBottomPanel(getBottomArea());
+        DrawMainArea();
+        DrawBottomPanel();
     }
-
-    private Rect getMainArea() => new Rect(0, 30, position.width, position.height - 30 - bottomHeight);
-    private Rect getBottomArea() => new Rect(0, position.height - bottomHeight, position.width, bottomHeight);
 
     private void DrawTopToolbar()
     {
@@ -50,58 +42,87 @@ public class StatEditor : EditorWindow
         GUILayout.Space(6);
     }
 
-    private void DrawMainArea(Rect area)
+    private void DrawMainArea()
     {
-        // Split into left/right
-        //Rect(x, y, width, height)
-        Rect main = new Rect(0, 30, area.width, area.height);
-        Rect left = new Rect(0, 30, leftWidth, area.height - 30);
-        Rect right = new Rect(leftWidth + 6, 30, area.width - leftWidth - 6, area.height - 30);
-
-        // Divider line with DrawRect(new Rect(x, y width, height), new Color(r,g,b,a))
-
-
-        DrawArea();
-
-    }
-
-
-
-    private void DrawArea()
-    {
-        rightScroll = EditorGUILayout.BeginScrollView(rightScroll);
 
         switch (topTab)
         {
             case 0:
-                statEditorBlockPanel.draw();
+                statEditorBlockPanel.draw(mainArea);
                 break;
 
             case 1:
-                statEditorUnitPanel.draw();
+                statEditorUnitPanel.draw(mainArea);
                 break;
 
             case 2:
-                statEditorSettingsPanel.draw();
+                statEditorSettingsPanel.draw(mainArea);
                 break;
         }
-
-        EditorGUILayout.EndScrollView();
     }
 
-    private void DrawBottomPanel(Rect area)
+    private void DrawBottomPanel()
     {
-        // Top border
-        EditorGUI.DrawRect(new Rect(0, area.y, area.width, 1), new Color(0,0,0,0.25f));
+        consolePanel.draw(mainArea);
+    }
+}
 
-        GUILayout.BeginArea(new Rect(area.x, area.y + 6, area.width, area.height - 6));
-        GUILayout.Label("Console / Diagnostics", EditorStyles.boldLabel);
+public class LayoutHandler
+{
+    private Rect area;
+    private Rect originalArea;
 
-        bottomScroll = EditorGUILayout.BeginScrollView(bottomScroll);
-        GUILayout.Label("Logs, validation results, warnings...");
-        EditorGUILayout.EndScrollView();
+    public Rect Area { get => area; set => area = value; }
 
-        GUILayout.EndArea();
+    /*
+    This class will be passed down the ui stack and will handle the layout of the panels.
+    each panel will modify the remaining area for the panels below it.
+    leaving only leftover space for the panels below it.
+    */
+
+    // X Cannont be greater then the width of the area unless the space is inside a scroll view
+    public float X { get => area.x; set => area.x = value; }
+    // Y cannot be greater then the height of the area unless the space is inside a scroll view
+    public float Y { get => area.y; set => area.y = value; }
+    // width and height will be the position.width and height of the parent window.
+    public float Width { get => area.width; set => area.width = value; }
+    public float Height { get => area.height; set => area.height = value; }
+
+    public float TakeWidth(float width)
+    {
+        float assignedWidth = Mathf.Min(width, area.width);
+        area.width -= assignedWidth;
+        return assignedWidth;
+    }
+
+    public float GetWidthTaken(){
+        return originalArea.width - area.width;
+    }
+
+    public float GetNextX()
+    {
+        return area.x + GetWidthTaken();
+    }
+
+    public float TakeHeight(float height)
+    {
+        float assignedHeight = Mathf.Min(height, area.height);
+        area.height -= assignedHeight;
+        return assignedHeight;
+    }
+
+    public float GetHeightTaken(){
+        return originalArea.height - area.height;
+    }
+
+    public float GetNextY()
+    {
+        return area.y + GetHeightTaken();
+    }
+
+    public void reset()
+    {
+        area = originalArea;
     }
 }
 #endif

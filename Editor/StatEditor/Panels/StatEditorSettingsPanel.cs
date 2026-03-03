@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class StatEditorSettingsPanel : BaseGUIPanel
 {
 
-    public override void draw()
+    public override void draw(Rect area)
     {
         GUILayout.Label("Settings", EditorStyles.boldLabel);
         GUILayout.Label("UI here...");
