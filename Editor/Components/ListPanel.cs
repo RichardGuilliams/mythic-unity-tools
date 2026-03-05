@@ -1,6 +1,5 @@
 #if UNITY_EDITOR
 using UnityEditor;
-
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ public class ListPanel : BaseGUIPanel
         Label("Left Panel", EditorStyles.boldLabel);
     }
 
-    public virtual void drawList<T>(Rect area, IList<T> items, System.Action<int, T> onClicked, System.Func<T, string> getLabel = null){
+    public virtual void drawList<T>(Rect area, List<T> items, System.Action<int, T> onClicked, System.Action<int, List<T>> onDelete, System.Func<T, string> getLabel = null){
         draw(area);
         
         getLabel ??= (item) => item?.ToString() ?? "(null)";
@@ -29,10 +28,13 @@ public class ListPanel : BaseGUIPanel
             int index = i;              // closure fix
             T item = items[index];
 
-            Button(getLabel(item), () => onClicked?.Invoke(index, item));
+            ButtonNestedRow.Draw(area, index, getLabel(item), item, items, onClicked, onDelete);
+
         }
             EditorGUILayout.EndScrollView();
     }
+
+
 
     public virtual void OnItemClicked(int index)
     {
@@ -40,14 +42,14 @@ public class ListPanel : BaseGUIPanel
     }
 }
 
-public class ButtonNested : BaseGUIPanel{
-    public override void draw(Rect area)
+public static class ButtonNestedRow
+{
+    public static void Draw<TItem, TItems>(Rect area, int index, string label, TItem item, List<TItems> items, System.Action<int, TItem> onClicked, System.Action<int, List<TItems>> onDelete = null)
     {
         GUILayout.BeginHorizontal();
-        Button("Button 1", () => Debug.Log("Button 1 clicked"));
-        Button("Button 2", () => Debug.Log("Button 2 clicked"));   
+        if (GUILayout.Button(label, GUILayout.ExpandWidth(true))) onClicked?.Invoke(index, item);
+        if (GUILayout.Button("Delete", GUILayout.Width(60))) onDelete?.Invoke(index, items);
         GUILayout.EndHorizontal();
-
     }
 }
 

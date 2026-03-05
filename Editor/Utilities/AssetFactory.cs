@@ -26,16 +26,16 @@ public static class AssetFactory
 
     public static void CreateFolders(string folderPath){
         string[] parts = folderPath.Split('/');
-        string current = parts[1]; // "Resources"
+        string current = $"{parts[0]}/{parts[1]}"; // "Resources"
 
         for (int i = 2; i < parts.Length; i++)
         {
-            string next = $"Assets/Resources/{parts[i]}";
+            string next = $"{current}/{parts[i]}";
             if (!AssetDatabase.IsValidFolder(next))
             {
-                AssetDatabase.CreateFolder("Assets/Resources", parts[i]);
+                AssetDatabase.CreateFolder(current, parts[i]);
             }
-            current = next;
+            current += $"/{parts[i]}";
         }
     }
 

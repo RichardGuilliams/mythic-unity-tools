@@ -49,7 +49,7 @@ public class StatEditorBlockPanel : BaseGUIPanel
         AssetPath = (EditorGUILayout.TextField("Asset Folder", AssetPath));
         AssetName = (EditorGUILayout.TextField("Asset Name", AssetName));
         Button("Create Stat Block", () => onCreateNewAsset());    
-        listPanel.drawList(left, statBlocks, (index, block) => Debug.Log("Clicked on: " + block.name), (block) => block.name);
+        listPanel.drawList(left, statBlocks, (index, block) => Debug.Log("Clicked on: " + block.name),  (index, statBlocks) => DeleteListEntry(index, statBlocks), (block) => block.name);
         Space(6);
         EditorGUI.DrawRect(new Rect(left.width - 1, 0, 12, area.height), new Color(0,0,0,0.25f));
         EndArea();
@@ -58,6 +58,15 @@ public class StatEditorBlockPanel : BaseGUIPanel
         Label("Stat Editor", EditorStyles.boldLabel);
         Label("UI here...");
         EndArea();
+    }
+
+    private void DeleteListEntry(int index, List<StatBlock> list){
+        list.RemoveAt(index);
+    }
+
+    private void LoadStatBlock(int index){
+        // we will load the stat block data from the specified asset path and populate the stat editor ui with the loaded 
+        // data.
     }
 
 
