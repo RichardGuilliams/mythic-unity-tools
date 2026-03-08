@@ -61,20 +61,14 @@ public class StatEditorBlockPanel : BaseGUIPanel
     }
 
     private void DeleteListEntry(int index, List<StatBlock> list){
+        AssetFactory.DeleteAsset(list[index]);
         list.RemoveAt(index);
     }
-
-    private void LoadStatBlock(int index){
-        // we will load the stat block data from the specified asset path and populate the stat editor ui with the loaded 
-        // data.
-    }
-
 
     private void onCreateNewAsset()
     {
         // Create a new stat block and add it to the list
-        AssetFactory.CreateAsset(typeof(StatBlock), AssetPath, AssetName, true);
-        StatBlock newStatBlock = CreateInstance<StatBlock>();
+        StatBlock newStatBlock = (StatBlock)AssetFactory.CreateAsset(typeof(StatBlock), AssetPath, AssetName, true);
         newStatBlock.name = AssetName;
         statBlocks.Add(newStatBlock);
     }

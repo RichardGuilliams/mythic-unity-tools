@@ -1,0 +1,3 @@
+Its important that we add a safety net that updates the stat editor panels statblocktemplate and the statblock lists
+when the user manually deletes a relevant file from the system. for this we should find out if deleting a file triggers some kind 
+of event we can hook into that will make it alot easier.
