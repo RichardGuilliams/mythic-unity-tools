@@ -6,6 +6,7 @@ using System.Collections.Generic;
 
 public class ListPanel : BaseGUIPanel
 {
+
     private UnityAction boundAction;
     private Vector2 scroll;
     public override void OnEnable()
@@ -32,13 +33,6 @@ public class ListPanel : BaseGUIPanel
 
         }
             EditorGUILayout.EndScrollView();
-    }
-
-
-
-    public virtual void OnItemClicked(int index)
-    {
-        Debug.Log("Clicked index: " + index);
     }
 }
 

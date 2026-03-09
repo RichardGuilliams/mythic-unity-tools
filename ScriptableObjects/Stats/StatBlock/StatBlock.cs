@@ -15,32 +15,17 @@ same when a stat is deleted.
 [CreateAssetMenu(fileName = "StatBlock", menuName = "Mythic/Stats/StatBlock")]
 public class StatBlock : AbstractScriptable
 {   
-    private List<StatBase> statsList;
+    public List<StatBase> statsList;
     private int statCount = 0;
     public string folder;
     [SerializeReference] public List<StatData> statData = new List<StatData>();
     private Dictionary<string, StatBase> stats = new Dictionary<string, StatBase>();
 
-    private void OnValidate()
+    public void Setup()
     {
-        // if(statsList.Count == 0) statsList = new List<StatBase>(Resources.LoadAll<StatBase>(folder));
-        // if(statsList.Count < statData.Count && statsList.Count != 0)
-        // {
-        //     ProcessStatsList();
-        //     return;
-        // }    
-        // if(statData.Count > statCount)
-        // {
-        //     statData.RemoveAt(statCount);
-        //     return;
-        // }
-        // if (!Application.isPlaying)
-        //     {
-        //         statCount = statsList.Count;
-        //         ProcessStatsList();
-        //     }
-
+        statsList = new List<StatBase>();
     }
+
     private void ProcessStatsList()
     {
             for(var i = statData.Count - 1; i < stats.Count; i++)
